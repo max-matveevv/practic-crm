@@ -1,26 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+	--background: #1A1C1F;
+	--foreground: #171717;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
+
+	--color-bg-1: #2B2E30;
+	--color-bg-2: #222528;
+
+	--color-btn: rgb(77, 135, 226);
+
+	--color-border: #ffffff29;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+	:root {
+		--background: #1A1C1F;
+		--foreground: #ededed;
+	}
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+	background: var(--background);
+	color: var(--foreground);
+	font-family: Arial, Helvetica, sans-serif;
 }
+
+
+.container {
+	max-width: 1360px;
+	padding: 0 20px;
+	margin: 0 auto;
+}
+
+.copy {
+	background-image: url('data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cpath%20fill%3D%22rgba(133, 133, 133, 0.99)%22%20stroke%3D%22transparent%22%20stroke-width%3D%220%22%20style%3D%22%22%20d%3D%22M11.9,9.2V2.8c0-1.5-1.2-2.8-2.8-2.8H2.8C1.2,0,0,1.2,0,2.8v6.4c0,1.5,1.2,2.7,2.8,2.7h6.4 C10.7,11.9,11.9,10.7,11.9,9.2z M1.5,9.2V2.8c0-0.7,0.6-1.2,1.2-1.2h6.4c0.7,0,1.3,0.6,1.3,1.2v6.4c0,0.7-0.6,1.2-1.3,1.2H2.8 C2.1,10.4,1.5,9.8,1.5,9.2z M15.2,5.6h-0.8c-0.4,0-0.8,0.3-0.8,0.8s0.3,0.8,0.8,0.8h0.8c0.5,0,0.8,0.4,0.8,0.8v7.2c0,0.5-0.4,0.9-0.8,0.9 H8c-0.5,0-0.9-0.4-0.9-0.9v-0.8c0-0.4-0.3-0.8-0.8-0.8s-0.8,0.3-0.8,0.8v0.8c0,1.3,1.1,2.4,2.4,2.4h7.2c1.3,0,2.3-1.1,2.3-2.4V7.9 C17.5,6.7,16.4,5.6,15.2,5.6z%22%20%2F%3E%3C%2Fsvg%3E');
+    width: 20px;
+    height: 20px;
+}
+/* .copy:hover {
+	background-image: url("data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20xmlns%3Axlink%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink%22%20width%3D%2264%22%20height%3D%2264%22%3E%3Cpath%20fill%3D%22rgba(255, 46, 46, 0.99)%22%20stroke%3D%22transparent%22%20stroke-width%3D%220%22%20style%3D%22%22%20d%3D%22M11.9,9.2V2.8c0-1.5-1.2-2.8-2.8-2.8H2.8C1.2,0,0,1.2,0,2.8v6.4c0,1.5,1.2,2.7,2.8,2.7h6.4\a C10.7,11.9,11.9,10.7,11.9,9.2z M1.5,9.2V2.8c0-0.7,0.6-1.2,1.2-1.2h6.4c0.7,0,1.3,0.6,1.3,1.2v6.4c0,0.7-0.6,1.2-1.3,1.2H2.8\a C2.1,10.4,1.5,9.8,1.5,9.2z\a M15.2,5.6h-0.8c-0.4,0-0.8,0.3-0.8,0.8s0.3,0.8,0.8,0.8h0.8c0.5,0,0.8,0.4,0.8,0.8v7.2c0,0.5-0.4,0.9-0.8,0.9\a H8c-0.5,0-0.9-0.4-0.9-0.9v-0.8c0-0.4-0.3-0.8-0.8-0.8s-0.8,0.3-0.8,0.8v0.8c0,1.3,1.1,2.4,2.4,2.4h7.2c1.3,0,2.3-1.1,2.3-2.4V7.9\a C17.5,6.7,16.4,5.6,15.2,5.6z%22%20%2F%3E%3C%2Fsvg%3E");
+} */

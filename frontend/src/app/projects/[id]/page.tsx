@@ -11,7 +11,7 @@ export default async function ProjectPage({ params }: { params: { id: string } }
     return (
         <div className="p-6">
             <h1 className="text-2xl font-bold mb-2">{project.title}</h1>
-            <p className="text-sm text-gray-600 mb-4">Created at: {new Date(project.created_at).toLocaleDateString()}</p>
+            <p className="text-sm text-gray-600 mb-4">Создан: {new Date(project.created_at).toLocaleDateString()}</p>
 
             {project.description && <p className="mb-4">{project.description}</p>}
 

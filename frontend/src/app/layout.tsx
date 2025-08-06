@@ -29,21 +29,22 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+				className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen`}
 			>
-				<Header />
+				<div className="container h-full">
+					<Header />
 
-				<div className="flex gap-4">
-					<div className="w-[250px]">
+					<div className="flex h-[calc(100%-100px)]">
+						
 						<Sidebar />
+
+						<div className="w-[calc(100%-250px-1rem)] bg-bg-2 rounded-r-xl">
+							{children}
+						</div>
 					</div>
 
-					<div className="w-[calc(100%-250px-1rem)]">
-						{children}
-					</div>
+					<Footer />
 				</div>
-
-				<Footer />
 			</body>
 		</html>
 	);
