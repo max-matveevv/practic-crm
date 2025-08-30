@@ -13,7 +13,7 @@ export default function TestCors() {
             const data = await res.json();
             setMessage('Ответ API: ' + JSON.stringify(data));
         } catch (e) {
-            setMessage('Ошибка: ' + e.message);
+            setMessage('Ошибка: ' + (e instanceof Error ? e.message : String(e)));
         }
     }
 
@@ -26,7 +26,7 @@ export default function TestCors() {
             <pre>{message}</pre>
 
 
-            <AddProjectForm />
+            <AddProjectForm onProjectAdded={(project) => console.log('Project added:', project)} />
         </main>
     );
 }

@@ -6,6 +6,9 @@ export function Sidebar () {
         <div className="w-[250px] bg-bg-1 rounded-l-xl flex flex-col gap-4 py-6 px-6">
             <Link href={`/`}>Главная</Link>
             <Link href={`/${appConfig.projectEndpoint}`}>Проекты</Link>
+            <Link href={'/tasks'}>
+                Задачи
+            </Link>
         </div>
     )
 }

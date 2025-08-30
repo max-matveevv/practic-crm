@@ -31,7 +31,7 @@ export default function ProjectsPage() {
     return (
         <div className="p-6">
             <div className="flex items-center justify-between gap-4 mb-4">
-                <h1 className="text-2xl font-bold mb-4">Проекты</h1>
+                <h1 className="text-2xl font-bold mb-4 text-blue-600">Проекты</h1>
 
 
                 <button

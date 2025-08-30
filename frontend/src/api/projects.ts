@@ -2,7 +2,7 @@ import { Project } from "@/lib/types";
 import { appConfig } from "@/lib/config";
 import axios from "axios";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL;
+const API_BASE = appConfig.apiBaseUrl;
 
 // получить все проекты
 export async function fetchProjects(): Promise<Project[]> {
@@ -18,6 +18,9 @@ export async function fetchProjects(): Promise<Project[]> {
 export async function addProject(data: {
     title: string;
     description?: string;
+    login?: string;
+    password?: string;
+    url?: string;
     accesses?: string;
 }): Promise<Project> {
     try {

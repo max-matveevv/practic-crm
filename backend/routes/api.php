@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TaskController;
 
 
 Route::get('/user', function (Request $request) {
@@ -16,3 +17,7 @@ Route::resource('projects', ProjectController::class)->only([
     'show',
     'destroy'
 ]);
+
+// Маршруты для задач
+Route::resource('tasks', TaskController::class);
+Route::get('tasks/projects/{project}', [TaskController::class, 'projectTasks']);

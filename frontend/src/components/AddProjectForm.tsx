@@ -8,8 +8,10 @@ const projectEndpoint = appConfig.projectEndpoint;
 import { addProject } from '@/api/projects'
 
 
+import { Project } from '@/lib/types';
+
 type Props = {
-    onProjectAdded: (project: any) => void
+    onProjectAdded: (project: Project) => void
 }
 
 export function AddProjectForm({ onProjectAdded }: Props) {
