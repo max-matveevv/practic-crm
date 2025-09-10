@@ -3,7 +3,7 @@ import Link from "next/link";
 export function Header () {
     return (
         <div className="flex items-center justify-between gap-4 p-4">
-            <Link href={'/'} className="font-bold text-xl text-blue-600 hover:text-green-800 transition-colors">
+            <Link href={'/'} className="font-bold text-xl text-green-600 hover:text-green-800 transition-colors">
                 PracticCRM
             </Link>
             <nav className="flex gap-4">
