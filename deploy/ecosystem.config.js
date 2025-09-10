@@ -16,9 +16,9 @@ module.exports = {
         APP_DEBUG: false,
         APP_URL: 'https://crm.practic.studio'
       },
-      error_file: '/var/log/pm2/practic-crm-backend-error.log',
-      out_file: '/var/log/pm2/practic-crm-backend-out.log',
-      log_file: '/var/log/pm2/practic-crm-backend.log',
+      error_file: '/home/practic-crm/logs/practic-crm-backend-error.log',
+      out_file: '/home/practic-crm/logs/practic-crm-backend-out.log',
+      log_file: '/home/practic-crm/logs/practic-crm-backend.log',
       time: true
     },
     {
@@ -35,9 +35,9 @@ module.exports = {
         PORT: 3000,
         NEXT_PUBLIC_API_URL: 'https://crm.practic.studio/api'
       },
-      error_file: '/var/log/pm2/practic-crm-frontend-error.log',
-      out_file: '/var/log/pm2/practic-crm-frontend-out.log',
-      log_file: '/var/log/pm2/practic-crm-frontend.log',
+      error_file: '/home/practic-crm/logs/practic-crm-frontend-error.log',
+      out_file: '/home/practic-crm/logs/practic-crm-frontend-out.log',
+      log_file: '/home/practic-crm/logs/practic-crm-frontend.log',
       time: true
     }
   ]
