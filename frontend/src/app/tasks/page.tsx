@@ -16,9 +16,9 @@ export default function TasksPage() {
     const [newTask, setNewTask] = useState({
         title: '',
         description: '',
-        status: 'pending' as const,
+        status: 'pending' as 'pending' | 'in_progress' | 'completed',
         project_id: undefined as number | undefined,
-        priority: 1 as const
+        priority: 1 as 1 | 2 | 3
     });
 
     useEffect(() => {
