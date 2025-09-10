@@ -17,7 +17,7 @@ export async function fetchTasks(params?: {
         const url = `${API_BASE}/tasks${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
         const res = await axios.get(url);
         return res.data;
-    } catch (error) {
+        } catch {
         throw new Error('Failed to fetch tasks');
     }
 }
@@ -33,7 +33,7 @@ export async function addTask(data: {
     try {
         const res = await axios.post(`${API_BASE}/tasks`, data);
         return res.data;
-    } catch (error) {
+        } catch {
         throw new Error('Failed to add task');
     }
 }
@@ -43,7 +43,7 @@ export async function updateTask(id: number, data: Partial<Task>): Promise<Task>
     try {
         const res = await axios.put(`${API_BASE}/tasks/${id}`, data);
         return res.data;
-    } catch (error) {
+        } catch {
         throw new Error('Failed to update task');
     }
 }
@@ -52,7 +52,7 @@ export async function updateTask(id: number, data: Partial<Task>): Promise<Task>
 export async function deleteTask(id: number): Promise<void> {
     try {
         await axios.delete(`${API_BASE}/tasks/${id}`);
-    } catch (error) {
+        } catch {
         throw new Error('Failed to delete task');
     }
 }
@@ -62,7 +62,7 @@ export async function getTask(id: string): Promise<Task | null> {
     try {
         const res = await axios.get(`${API_BASE}/tasks/${id}`);
         return res.data;
-    } catch (error) {
+        } catch {
         console.error('Error fetching task:', error);
         return null;
     }
@@ -73,7 +73,7 @@ export async function getProjectTasks(projectId: number): Promise<Task[]> {
     try {
         const res = await axios.get(`${API_BASE}/tasks/projects/${projectId}`);
         return res.data;
-    } catch (error) {
+        } catch {
         throw new Error('Failed to fetch project tasks');
     }
 }

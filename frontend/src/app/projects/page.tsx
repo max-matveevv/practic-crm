@@ -8,8 +8,8 @@ import { appConfig } from '@/lib/config';
 import { fetchProjects } from '@/api/projects';
 
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-const projectEndpoint = appConfig.projectEndpoint;
+// const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+// const projectEndpoint = appConfig.projectEndpoint;
 
 export default function ProjectsPage() {
     const [projects, setProjects] = useState<Project[]>([])

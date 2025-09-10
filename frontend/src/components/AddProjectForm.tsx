@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { appConfig } from '@/lib/config';
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-const projectEndpoint = appConfig.projectEndpoint;
+// const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+// const projectEndpoint = appConfig.projectEndpoint;
 import { addProject } from '@/api/projects'
 
 
@@ -49,7 +49,7 @@ export function AddProjectForm({ onProjectAdded }: Props) {
             setPassword('')
             setUrl('')
             setAccesses('')
-        } catch (error) {
+        } catch {
             alert('Ошибка при добавлении проекта')
         } finally {
             setLoading(false)

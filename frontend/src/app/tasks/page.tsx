@@ -170,7 +170,7 @@ export default function TasksPage() {
                         </select>
                         <select
                             value={newTask.status}
-                            onChange={(e) => setNewTask({...newTask, status: e.target.value as any})}
+                            onChange={(e) => setNewTask({...newTask, status: e.target.value as 'pending' | 'in_progress' | 'completed'})}
                             className="border rounded px-3 py-2"
                         >
                             <option value="pending">Ожидает</option>
@@ -179,7 +179,7 @@ export default function TasksPage() {
                         </select>
                         <select
                             value={newTask.priority}
-                            onChange={(e) => setNewTask({...newTask, priority: Number(e.target.value) as any})}
+                            onChange={(e) => setNewTask({...newTask, priority: Number(e.target.value) as 1 | 2 | 3})}
                             className="border rounded px-3 py-2"
                         >
                             <option value={1}>Низкий приоритет</option>
@@ -231,7 +231,7 @@ export default function TasksPage() {
                             <div className="flex gap-2">
                                 <select
                                     value={task.status}
-                                    onChange={(e) => handleUpdateTask(task.id, { status: e.target.value as any })}
+                                    onChange={(e) => handleUpdateTask(task.id, { status: e.target.value as 'pending' | 'in_progress' | 'completed' })}
                                     className="border rounded px-2 py-1 text-sm"
                                 >
                                     <option value="pending">Ожидает</option>
