@@ -1,10 +1,6 @@
 'use client'
 
 import { useState } from 'react';
-import { appConfig } from '@/lib/config';
-
-// const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-// const projectEndpoint = appConfig.projectEndpoint;
 import { addProject } from '@/api/projects'
 
 

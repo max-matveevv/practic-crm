@@ -62,7 +62,7 @@ export async function getTask(id: string): Promise<Task | null> {
     try {
         const res = await axios.get(`${API_BASE}/tasks/${id}`);
         return res.data;
-        } catch {
+        } catch (error) {
         console.error('Error fetching task:', error);
         return null;
     }

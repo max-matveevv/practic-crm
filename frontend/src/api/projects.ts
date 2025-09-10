@@ -45,7 +45,7 @@ export async function getProject(id: string): Promise<Project | null> {
     try {
         const res = await axios.get(`${API_BASE}/${appConfig.projectEndpoint}/${id}`);
         return res.data;
-        } catch {
+        } catch (error) {
         console.error('Error fetching project:', error);
         return null;
     }
