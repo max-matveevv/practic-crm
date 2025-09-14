@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('welcome');
@@ -10,6 +12,7 @@ Route::get('/', function () {
 Route::get('/sanctum/csrf-cookie', function () {
     return response()->json(['message' => 'CSRF cookie set']);
 })->middleware(['web', 'throttle:60,1']);
+
 
 // Telescope маршруты (только для продакшена)
 if (app()->environment('production')) {
@@ -29,8 +32,8 @@ if (app()->environment('production')) {
         
         $user = \App\Models\User::where('email', $email)->first();
         
-        if ($user && \Hash::check($password, $user->password)) {
-            auth()->login($user);
+        if ($user && Hash::check($password, $user->password)) {
+            Auth::login($user);
             return redirect('/telescope');
         }
         
@@ -41,7 +44,7 @@ if (app()->environment('production')) {
     Route::get('/telescope-quick', function () {
         $user = \App\Models\User::where('email', 'telescope@crm.practic.studio')->first();
         if ($user) {
-            auth()->login($user);
+            Auth::login($user);
             return redirect('/telescope');
         }
         return 'User not found. Run: php artisan telescope:user telescope@crm.practic.studio telescope123';
