@@ -135,8 +135,14 @@ else
     if [ -L public/storage ]; then
         echo "✅ Storage link created via artisan: $(readlink public/storage)"
     else
-        echo "❌ Failed to create storage link"
-        echo "🔧 Manual fix needed on server"
+        echo "❌ Failed to create storage link, trying direct copy..."
+        # Альтернативное решение - прямая копия
+        if [ -d "storage/app/public" ]; then
+            cp -r storage/app/public/* public/ 2>/dev/null || true
+            echo "✅ Copied storage files to public directory"
+        else
+            echo "❌ Storage directory not found"
+        fi
     fi
 fi
 
@@ -158,6 +164,15 @@ echo "✅ Permissions set"
 if [ ! -d "storage/app/public/task-images" ]; then
     mkdir -p storage/app/public/task-images
     echo "📁 Created task-images directory"
+fi
+
+# Синхронизировать файлы storage с public (fallback для проблемных серверов)
+if [ -d "storage/app/public" ] && [ -d "public" ]; then
+    rsync -av --delete storage/app/public/ public/storage/ 2>/dev/null || {
+        echo "🔄 Rsync failed, using cp..."
+        cp -r storage/app/public/* public/ 2>/dev/null || true
+    }
+    echo "✅ Storage files synchronized to public directory"
 fi
 
 # Проверить storage link
@@ -227,6 +242,14 @@ if [ -d "storage/app/public/task-images" ]; then
     echo "📊 Images count: $(ls storage/app/public/task-images/ | wc -l)"
 else
     echo "❌ Task images directory missing"
+fi
+
+echo "🌐 Public storage access:"
+if [ -d "public/storage/task-images" ]; then
+    echo "✅ Public storage accessible"
+    echo "📊 Public images count: $(ls public/storage/task-images/ 2>/dev/null | wc -l)"
+else
+    echo "❌ Public storage not accessible"
 fi
 
 echo "🗄️  Database file:"
