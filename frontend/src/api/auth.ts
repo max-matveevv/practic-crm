@@ -47,7 +47,11 @@ const getCsrfCookie = async (): Promise<void> => {
   const baseUrl = API_BASE_URL.replace('/api', '')
   const response = await fetch(`${baseUrl}/sanctum/csrf-cookie`, {
     method: 'GET',
-    credentials: 'include'
+    credentials: 'include',
+    headers: {
+      'Accept': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest'
+    }
   })
   
   if (!response.ok) {
