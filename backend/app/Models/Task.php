@@ -12,11 +12,13 @@ class Task extends Model
         'status',
         'project_id',
         'priority',
-        'user_id'
+        'user_id',
+        'images'
     ];
 
     protected $casts = [
         'priority' => 'integer',
+        'images' => 'array',
     ];
 
     // Отношение к пользователю
@@ -31,23 +33,4 @@ class Task extends Model
         return $this->belongsTo(Project::class);
     }
 
-    // Получить статус на русском языке
-    public function getStatusTextAttribute()
-    {
-        return [
-            'pending' => 'Ожидает',
-            'in_progress' => 'В работе',
-            'completed' => 'Завершена'
-        ][$this->status] ?? $this->status;
-    }
-
-    // Получить приоритет на русском языке
-    public function getPriorityTextAttribute()
-    {
-        return [
-            1 => 'Низкий',
-            2 => 'Средний',
-            3 => 'Высокий'
-        ][$this->priority] ?? $this->priority;
-    }
 }

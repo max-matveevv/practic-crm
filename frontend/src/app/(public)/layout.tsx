@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { Header } from "@/components/elements/Header";
+import { metadataConfigs } from "@/lib/metadata";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -14,10 +15,7 @@ const geistMono = Geist_Mono({
 	subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-	title: "PracticCRM - Система управления проектами",
-	description: "Эффективное управление проектами и задачами",
-};
+export const metadata: Metadata = metadataConfigs.public();
 
 export default function PublicLayout({
 	children,

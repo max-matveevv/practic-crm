@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -156,6 +158,95 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Пароль успешно изменен'
+        ]);
+    }
+
+    /**
+     * Отправить ссылку для сброса пароля
+     */
+    public function sendPasswordResetLink(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Ошибка валидации',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $email = $request->email;
+        
+        // Генерируем токен
+        $token = Str::random(64);
+        
+        // Сохраняем токен в базе (создаем или обновляем)
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $email],
+            [
+                'token' => Hash::make($token),
+                'created_at' => now()
+            ]
+        );
+
+        // В реальном приложении здесь бы отправлялось письмо
+        // Для демо просто возвращаем токен
+        return response()->json([
+            'message' => 'Ссылка для сброса пароля отправлена на email',
+            'reset_token' => $token, // В реальном приложении не возвращаем токен
+            'reset_url' => url("/reset-password?token={$token}&email={$email}")
+        ]);
+    }
+
+    /**
+     * Сбросить пароль по токену
+     */
+    public function resetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+            'token' => 'required|string',
+            'password' => 'required|string|min:8|confirmed'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Ошибка валидации',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // Проверяем токен
+        $passwordReset = DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->first();
+
+        if (!$passwordReset || !Hash::check($request->token, $passwordReset->token)) {
+            return response()->json([
+                'message' => 'Неверный или истекший токен сброса пароля'
+            ], 400);
+        }
+
+        // Проверяем, что токен не старше 1 часа
+        if (now()->diffInMinutes($passwordReset->created_at) > 60) {
+            return response()->json([
+                'message' => 'Токен сброса пароля истек'
+            ], 400);
+        }
+
+        // Обновляем пароль
+        $user = User::where('email', $request->email)->first();
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        // Удаляем токен
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+        return response()->json([
+            'message' => 'Пароль успешно сброшен'
         ]);
     }
 }

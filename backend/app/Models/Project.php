@@ -41,14 +41,4 @@ class Project extends Model
         return $this->hasMany(Task::class);
     }
 
-    // Получить количество задач по статусам
-    public function getTasksCountAttribute()
-    {
-        return [
-            'total' => $this->tasks()->count(),
-            'pending' => $this->tasks()->where('status', 'pending')->count(),
-            'in_progress' => $this->tasks()->where('status', 'in_progress')->count(),
-            'completed' => $this->tasks()->where('status', 'completed')->count(),
-        ];
-    }
 }

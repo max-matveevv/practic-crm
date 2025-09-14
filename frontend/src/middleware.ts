@@ -10,6 +10,9 @@ function isPublicRoute(pathname: string): boolean {
   // Страницы авторизации
   if (pathname.startsWith('/auth')) return true
   
+  // Страница сброса пароля
+  if (pathname.startsWith('/reset-password')) return true
+  
   return false
 }
 
@@ -29,8 +32,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Если это публичный маршрут, пропускаем
+  // Если это публичный маршрут
   if (isPublicRoute(pathname)) {
+    // Если пользователь авторизован и заходит на главную страницу, перенаправляем на задачи
+    if (pathname === '/' && hasAuthToken(request)) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/tasks'
+      return NextResponse.redirect(url)
+    }
     return NextResponse.next()
   }
 

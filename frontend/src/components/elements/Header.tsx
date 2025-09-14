@@ -1,26 +1,13 @@
 'use client'
 
 import Link from "next/link";
-import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { AuthModal } from "@/components/auth/AuthModal";
 import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/Button";
 
 export function Header() {
     const { user, logout, isAuthenticated } = useAuth();
-    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-    const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
     const pathname = usePathname();
-
-    const handleLogin = () => {
-        setAuthMode('login');
-        setIsAuthModalOpen(true);
-    };
-
-    const handleRegister = () => {
-        setAuthMode('register');
-        setIsAuthModalOpen(true);
-    };
 
     const handleLogout = async () => {
         try {
@@ -33,59 +20,56 @@ export function Header() {
     return (
         <>
             <div className="flex items-center justify-between gap-4 p-4">
-                <Link href={'/'} className="font-bold text-xl text-green-600 hover:text-green-800 transition-colors">
+                <Link href={'/'} className="font-bold text-xl text-white hover:text-white/80 transition-colors">
                     PracticCRM
                 </Link>
                 
                 <nav className="flex items-center gap-4">
                     {isAuthenticated ? (
                         <>
-                            <Link href={'/projects'} className="text-gray-600 hover:text-gray-900">
+                            <Link href={'/dashboard'} className="text-white/70 hover:text-white text-sm transition-colors">
+                                Дашборд
+                            </Link>
+                            <Link href={'/projects'} className="text-white/70 hover:text-white text-sm transition-colors">
                                 Проекты
                             </Link>
-                            <Link href={'/tasks'} className="text-gray-600 hover:text-gray-900">
+                            <Link href={'/tasks'} className="text-white/70 hover:text-white text-sm transition-colors">
                                 Задачи
                             </Link>
                             
                             <div className="flex items-center gap-3">
-                                <span className="text-sm text-gray-600">
+                                <span className="text-sm text-white/70">
                                     Привет, {user?.name}!
                                 </span>
-                                <button
+                                <Button
                                     onClick={handleLogout}
-                                    className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700 transition-colors"
+                                    variant="danger"
+                                    size="sm"
                                 >
                                     Выйти
-                                </button>
+                                </Button>
                             </div>
                         </>
                     ) : (
                         // Показываем кнопки входа только на главной странице
                         pathname === '/' && (
                             <div className="flex items-center gap-2">
-                                <button
-                                    onClick={handleLogin}
-                                    className="text-gray-600 hover:text-gray-900 px-3 py-1 rounded border border-gray-300 hover:border-gray-400 transition-colors"
-                                >
-                                    Войти
-                                </button>
-                                <button
-                                    onClick={handleRegister}
-                                    className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 transition-colors"
-                                >
-                                    Регистрация
-                                </button>
+                                <Link href="/auth">
+                                    <Button variant="secondary" size="sm">
+                                        Войти
+                                    </Button>
+                                </Link>
+                                <Link href="/auth">
+                                    <Button size="sm">
+                                        Регистрация
+                                    </Button>
+                                </Link>
                             </div>
                         )
                     )}
                 </nav>
             </div>
 
-            <AuthModal
-                isOpen={isAuthModalOpen}
-                onClose={() => setIsAuthModalOpen(false)}
-                defaultMode={authMode}
-            />
         </>
     );
 }

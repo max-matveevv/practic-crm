@@ -34,7 +34,8 @@ class TaskController extends Controller
             'description' => 'nullable|string',
             'status' => 'in:pending,in_progress,completed',
             'project_id' => 'nullable|exists:projects,id',
-            'priority' => 'integer|min:1|max:3'
+            'priority' => 'integer|min:1|max:3',
+            'images' => 'nullable|array'
         ]);
 
         // Добавляем user_id к валидированным данным
@@ -68,7 +69,8 @@ class TaskController extends Controller
             'description' => 'nullable|string',
             'status' => 'sometimes|in:pending,in_progress,completed',
             'project_id' => 'nullable|exists:projects,id',
-            'priority' => 'sometimes|integer|min:1|max:3'
+            'priority' => 'sometimes|integer|min:1|max:3',
+            'images' => 'nullable|array'
         ]);
 
         $task->update($validated);

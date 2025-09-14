@@ -26,6 +26,14 @@ export type Project = {
     }
 }
 
+export type TaskImage = {
+    filename: string
+    path: string
+    url: string
+    original_name: string
+    size: number
+}
+
 export type Task = {
     id: number
     title: string
@@ -33,6 +41,7 @@ export type Task = {
     status: 'pending' | 'in_progress' | 'completed'
     project_id?: number
     priority: 1 | 2 | 3
+    images?: TaskImage[]
     created_at: string
     updated_at: string
     project?: Project

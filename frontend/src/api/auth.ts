@@ -1,14 +1,5 @@
 import { AuthResponse, LoginCredentials, RegisterCredentials, User } from '@/lib/types'
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
-
-// Получить токен из localStorage
-const getToken = (): string | null => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('auth_token')
-  }
-  return null
-}
+import { getToken, getAuthHeaders, API_BASE_URL } from './common'
 
 // Сохранить токен в localStorage и cookies
 const setToken = (token: string): void => {
@@ -28,20 +19,6 @@ const removeToken = (): void => {
   }
 }
 
-// Получить CSRF токен из cookies
-const getCsrfToken = (): string | null => {
-  if (typeof window !== 'undefined') {
-    const cookies = document.cookie.split(';')
-    for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split('=')
-      if (name === 'XSRF-TOKEN') {
-        return decodeURIComponent(value)
-      }
-    }
-  }
-  return null
-}
-
 // Получить CSRF cookie
 const getCsrfCookie = async (): Promise<void> => {
   const baseUrl = API_BASE_URL.replace('/api', '')
@@ -59,19 +36,6 @@ const getCsrfCookie = async (): Promise<void> => {
   }
 }
 
-// Получить заголовки с авторизацией
-const getAuthHeaders = (includeAuth = true): HeadersInit => {
-  const token = getToken()
-  const csrfToken = getCsrfToken()
-  
-  return {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
-    ...(includeAuth && token && { 'Authorization': `Bearer ${token}` }),
-    ...(csrfToken && { 'X-XSRF-TOKEN': csrfToken })
-  }
-}
 
 // Вход в систему
 export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
@@ -224,6 +188,57 @@ export const changePassword = async (passwordData: {
     }
   } catch (error) {
     console.error('Change password error:', error)
+    throw error
+  }
+}
+
+// Отправить ссылку для сброса пароля
+export const sendPasswordResetLink = async (email: string): Promise<{ message: string; reset_url?: string }> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+      method: 'POST',
+      headers: getAuthHeaders(false),
+      credentials: 'include',
+      body: JSON.stringify({ email })
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || 'Ошибка отправки ссылки для сброса пароля')
+    }
+
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Send password reset link error:', error)
+    throw error
+  }
+}
+
+// Сбросить пароль по токену
+export const resetPassword = async (email: string, token: string, password: string, passwordConfirmation: string): Promise<{ message: string }> => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
+      method: 'POST',
+      headers: getAuthHeaders(false),
+      credentials: 'include',
+      body: JSON.stringify({
+        email,
+        token,
+        password,
+        password_confirmation: passwordConfirmation
+      })
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || 'Ошибка сброса пароля')
+    }
+
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Reset password error:', error)
     throw error
   }
 }

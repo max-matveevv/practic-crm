@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { LoginCredentials } from '@/lib/types'
+import { Input } from '@/components/ui/Input'
+import { Button } from '@/components/ui/Button'
 
 interface LoginFormProps {
   onSuccess?: () => void
@@ -37,67 +39,64 @@ export function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
   }
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+    <div className="max-w-md mx-auto bg-bg-1 rounded-lg shadow-md p-6">
+      <h2 className="text-2xl font-bold text-center mb-6 text-white">
         Вход в систему
       </h2>
 
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="bg-red-900/50 border border-red-500 text-red-300 px-4 py-3 rounded mb-4">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="Введите ваш email"
-          />
-        </div>
+        <Input
+          label="Email"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="Введите ваш email"
+          required
+        />
 
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            Пароль
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="Введите ваш пароль"
-          />
-        </div>
+        <Input
+          label="Пароль"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Введите ваш пароль"
+          required
+        />
 
-        <button
+        <Button
           type="submit"
-          disabled={loading}
-          className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          loading={loading}
+          className="w-full"
         >
           {loading ? 'Вход...' : 'Войти'}
-        </button>
+        </Button>
       </form>
+
+      <div className="mt-3 text-center">
+        <a
+          href="/reset-password"
+          className="text-sm text-white/70 hover:text-white font-medium"
+        >
+          Забыли пароль?
+        </a>
+      </div>
 
       {onSwitchToRegister && (
         <div className="mt-4 text-center">
-          <p className="text-gray-600">
+          <p className="text-white/70">
             Нет аккаунта?{' '}
             <button
               type="button"
               onClick={onSwitchToRegister}
-              className="text-green-600 hover:text-green-700 font-medium"
+              className="text-green-400 hover:text-green-300 font-medium"
             >
               Зарегистрироваться
             </button>

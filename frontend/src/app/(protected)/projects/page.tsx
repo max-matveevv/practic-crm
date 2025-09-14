@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { AddProjectForm } from '@/components/AddProjectForm';
-import { ProjectCard } from '@/components/ProjectCard';
+import { AddProjectForm } from '@/components/ProjectCard/AddProjectForm';
+import { ProjectCard } from '@/components/ProjectCard/ProjectCard';
 import { Project } from '@/lib/types';
 import { fetchProjects } from '@/api/projects';
 
@@ -26,7 +26,7 @@ export default function ProjectsPage() {
     return (
         <div className="p-6">
                 <div className="flex items-center justify-between gap-4 mb-4">
-                    <h1 className="text-2xl font-bold mb-4 text-blue-600">Проекты</h1>
+                    <h1 className="text-2xl font-bold mb-4 text-white">Проекты</h1>
 
 
                     <button

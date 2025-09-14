@@ -5,11 +5,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FileUploadController;
 
 
 // Маршруты авторизации (публичные)
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/forgot-password', [AuthController::class, 'sendPasswordResetLink']);
+Route::post('/auth/reset-password', [AuthController::class, 'resetPassword']);
 
 // Защищенные маршруты
 Route::middleware('auth:sanctum')->group(function () {
@@ -19,10 +22,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/auth/profile', [AuthController::class, 'updateProfile']);
     Route::post('/auth/change-password', [AuthController::class, 'changePassword']);
     
-    // Пользователь
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
     
     // Проекты
     Route::resource('projects', ProjectController::class)->only([
@@ -35,4 +34,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Задачи
     Route::resource('tasks', TaskController::class);
     Route::get('tasks/projects/{project}', [TaskController::class, 'projectTasks']);
+    
+    // Загрузка файлов
+    Route::post('/upload/images', [FileUploadController::class, 'uploadImages']);
 });

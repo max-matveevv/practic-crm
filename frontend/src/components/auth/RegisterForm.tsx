@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { RegisterCredentials } from '@/lib/types'
+import { Input } from '@/components/ui/Input'
+import { Button } from '@/components/ui/Button'
 
 interface RegisterFormProps {
   onSuccess?: () => void
@@ -50,101 +52,77 @@ export function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) 
   }
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+    <div className="max-w-md mx-auto bg-bg-1 rounded-lg shadow-md p-6">
+      <h2 className="text-2xl font-bold text-center mb-6 text-white">
         Регистрация
       </h2>
 
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="bg-red-900/50 border border-red-500 text-red-300 px-4 py-3 rounded mb-4">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-            Имя
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="Введите ваше имя"
-          />
-        </div>
+        <Input
+          label="Имя"
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          placeholder="Введите ваше имя"
+          required
+        />
 
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="Введите ваш email"
-          />
-        </div>
+        <Input
+          label="Email"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="Введите ваш email"
+          required
+        />
 
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            Пароль
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            minLength={8}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="Минимум 8 символов"
-          />
-        </div>
+        <Input
+          label="Пароль"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          placeholder="Минимум 8 символов"
+          minLength={8}
+          required
+        />
 
-        <div>
-          <label htmlFor="password_confirmation" className="block text-sm font-medium text-gray-700 mb-1">
-            Подтверждение пароля
-          </label>
-          <input
-            type="password"
-            id="password_confirmation"
-            name="password_confirmation"
-            value={formData.password_confirmation}
-            onChange={handleChange}
-            required
-            minLength={8}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            placeholder="Повторите пароль"
-          />
-        </div>
+        <Input
+          label="Подтверждение пароля"
+          type="password"
+          name="password_confirmation"
+          value={formData.password_confirmation}
+          onChange={handleChange}
+          placeholder="Повторите пароль"
+          minLength={8}
+          required
+        />
 
-        <button
+        <Button
           type="submit"
-          disabled={loading}
-          className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          loading={loading}
+          className="w-full"
         >
           {loading ? 'Регистрация...' : 'Зарегистрироваться'}
-        </button>
+        </Button>
       </form>
 
       {onSwitchToLogin && (
         <div className="mt-4 text-center">
-          <p className="text-gray-600">
+          <p className="text-white/70">
             Уже есть аккаунт?{' '}
             <button
               type="button"
               onClick={onSwitchToLogin}
-              className="text-green-600 hover:text-green-700 font-medium"
+              className="text-green-400 hover:text-green-300 font-medium"
             >
               Войти
             </button>

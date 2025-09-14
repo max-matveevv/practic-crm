@@ -1,46 +1,5 @@
 import { Project } from "@/lib/types";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
-
-// Получить токен из localStorage
-const getToken = (): string | null => {
-  if (typeof window !== 'undefined') {
-    return localStorage.getItem('auth_token')
-  }
-  return null
-}
-
-// Получить CSRF токен из cookies
-const getCsrfToken = (): string | null => {
-  if (typeof window !== 'undefined') {
-    const cookies = document.cookie.split(';')
-    for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split('=')
-      if (name === 'XSRF-TOKEN') {
-        return decodeURIComponent(value)
-      }
-    }
-  }
-  return null
-}
-
-// Получить заголовки с авторизацией
-const getAuthHeaders = (): HeadersInit => {
-  const token = getToken()
-  const csrfToken = getCsrfToken()
-  
-  if (!token) {
-    throw new Error('Токен авторизации не найден')
-  }
-  
-  return {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
-    'Authorization': `Bearer ${token}`,
-    ...(csrfToken && { 'X-XSRF-TOKEN': csrfToken })
-  }
-}
+import { getAuthHeaders, API_BASE_URL } from './common'
 
 // получить все проекты
 export async function fetchProjects(): Promise<Project[]> {
