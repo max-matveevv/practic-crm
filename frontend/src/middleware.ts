@@ -1,11 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// Публичные маршруты, которые доступны без авторизации
-const publicRoutes = [
-  '/',
-  '/auth'
-]
 
 // Проверяем, является ли маршрут публичным
 function isPublicRoute(pathname: string): boolean {

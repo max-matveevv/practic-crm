@@ -32,7 +32,7 @@ const removeToken = (): void => {
 const getCsrfToken = (): string | null => {
   if (typeof window !== 'undefined') {
     const cookies = document.cookie.split(';')
-    for (let cookie of cookies) {
+    for (const cookie of cookies) {
       const [name, value] = cookie.trim().split('=')
       if (name === 'XSRF-TOKEN') {
         return decodeURIComponent(value)
