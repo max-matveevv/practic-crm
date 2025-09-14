@@ -77,11 +77,17 @@ export default function TasksPage() {
         }
     };
 
-    const filteredTasks = tasks.filter(task => {
-        if (filterProject && task.project_id?.toString() !== filterProject) return false;
-        if (filterStatus && task.status !== filterStatus) return false;
-        return true;
-    });
+    const filteredTasks = tasks
+        .filter(task => {
+            if (filterProject && task.project_id?.toString() !== filterProject) return false;
+            if (filterStatus && task.status !== filterStatus) return false;
+            return true;
+        })
+        .sort((a, b) => {
+            // Сначала в работе, затем ожидающие, затем завершенные
+            const statusOrder = { 'in_progress': 0, 'pending': 1, 'completed': 2 };
+            return statusOrder[a.status] - statusOrder[b.status];
+        });
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -205,7 +211,10 @@ export default function TasksPage() {
             {/* Список задач */}
             <div className="space-y-4">
                 {filteredTasks.map(task => (
-                    <div key={task.id} className="border rounded p-4">
+                    <div 
+                        key={task.id} 
+                        className={`border rounded p-4 ${task.status === 'completed' ? 'opacity-60' : ''}`}
+                    >
                         <div className="flex justify-between items-start">
                             <div className="flex-1">
                                 <div className="flex items-center gap-2 mb-2">
