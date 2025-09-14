@@ -1,8 +1,24 @@
 import { Task } from "@/lib/types";
-import { appConfig } from "@/lib/config";
-import axios from "axios";
 
-const API_BASE = appConfig.apiBaseUrl;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
+
+// Получить токен из localStorage
+const getToken = (): string | null => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('auth_token')
+  }
+  return null
+}
+
+// Получить заголовки с авторизацией
+const getAuthHeaders = (): HeadersInit => {
+  const token = getToken()
+  return {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    ...(token && { 'Authorization': `Bearer ${token}` })
+  }
+}
 
 // получить все задачи
 export async function fetchTasks(params?: {
@@ -14,10 +30,19 @@ export async function fetchTasks(params?: {
         if (params?.project_id) queryParams.append('project_id', params.project_id.toString());
         if (params?.status) queryParams.append('status', params.status);
         
-        const url = `${API_BASE}/tasks${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
-        const res = await axios.get(url);
-        return res.data;
-        } catch {
+        const url = `${API_BASE_URL}/tasks${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch tasks');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching tasks:', error);
         throw new Error('Failed to fetch tasks');
     }
 }
@@ -31,9 +56,19 @@ export async function addTask(data: {
     priority?: 1 | 2 | 3;
 }): Promise<Task> {
     try {
-        const res = await axios.post(`${API_BASE}/tasks`, data);
-        return res.data;
-        } catch {
+        const response = await fetch(`${API_BASE_URL}/tasks`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to add task');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error adding task:', error);
         throw new Error('Failed to add task');
     }
 }
@@ -41,9 +76,19 @@ export async function addTask(data: {
 // обновить задачу
 export async function updateTask(id: number, data: Partial<Task>): Promise<Task> {
     try {
-        const res = await axios.put(`${API_BASE}/tasks/${id}`, data);
-        return res.data;
-        } catch {
+        const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to update task');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error updating task:', error);
         throw new Error('Failed to update task');
     }
 }
@@ -51,8 +96,16 @@ export async function updateTask(id: number, data: Partial<Task>): Promise<Task>
 // удалить задачу
 export async function deleteTask(id: number): Promise<void> {
     try {
-        await axios.delete(`${API_BASE}/tasks/${id}`);
-        } catch {
+        const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders()
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to delete task');
+        }
+    } catch (error) {
+        console.error('Error deleting task:', error);
         throw new Error('Failed to delete task');
     }
 }
@@ -60,9 +113,20 @@ export async function deleteTask(id: number): Promise<void> {
 // получить задачу по ID
 export async function getTask(id: string): Promise<Task | null> {
     try {
-        const res = await axios.get(`${API_BASE}/tasks/${id}`);
-        return res.data;
-        } catch (error) {
+        const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                return null;
+            }
+            throw new Error('Failed to fetch task');
+        }
+
+        return await response.json();
+    } catch (error) {
         console.error('Error fetching task:', error);
         return null;
     }
@@ -71,9 +135,18 @@ export async function getTask(id: string): Promise<Task | null> {
 // получить задачи проекта
 export async function getProjectTasks(projectId: number): Promise<Task[]> {
     try {
-        const res = await axios.get(`${API_BASE}/tasks/projects/${projectId}`);
-        return res.data;
-        } catch {
+        const response = await fetch(`${API_BASE_URL}/tasks/projects/${projectId}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch project tasks');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching project tasks:', error);
         throw new Error('Failed to fetch project tasks');
     }
 }

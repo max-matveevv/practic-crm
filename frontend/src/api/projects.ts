@@ -1,16 +1,41 @@
 import { Project } from "@/lib/types";
-import { appConfig } from "@/lib/config";
-import axios from "axios";
 
-const API_BASE = appConfig.apiBaseUrl;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'
+
+// Получить токен из localStorage
+const getToken = (): string | null => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('auth_token')
+  }
+  return null
+}
+
+// Получить заголовки с авторизацией
+const getAuthHeaders = (): HeadersInit => {
+  const token = getToken()
+  return {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    ...(token && { 'Authorization': `Bearer ${token}` })
+  }
+}
 
 // получить все проекты
 export async function fetchProjects(): Promise<Project[]> {
     try {
-        const res = await axios.get(`${API_BASE}/${appConfig.projectEndpoint}`);
-        return res.data;
-        } catch {
-        throw new Error('Failed to fetch projects');
+        const response = await fetch(`${API_BASE_URL}/projects`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        })
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch projects')
+        }
+
+        return await response.json()
+    } catch (error) {
+        console.error('Error fetching projects:', error)
+        throw new Error('Failed to fetch projects')
     }
 }
 
@@ -22,31 +47,69 @@ export async function addProject(data: {
     password?: string;
     url?: string;
     accesses?: string;
+    admin_url?: string;
+    admin_login?: string;
+    admin_password?: string;
+    ssh_host?: string;
+    ssh_user?: string;
+    ssh_password?: string;
+    ssh_port?: number;
+    build_commands?: string;
+    notes?: string;
 }): Promise<Project> {
     try {
-        const res = await axios.post(`${API_BASE}/${appConfig.projectEndpoint}`, data);
-        return res.data;
-        } catch {
-        throw new Error('Failed to add project');
+        const response = await fetch(`${API_BASE_URL}/projects`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(data)
+        })
+
+        if (!response.ok) {
+            throw new Error('Failed to add project')
+        }
+
+        return await response.json()
+    } catch (error) {
+        console.error('Error adding project:', error)
+        throw new Error('Failed to add project')
     }
 }
 
 // удалить проект из базы
 export async function deleteProject(id: number): Promise<void> {
     try {
-        await axios.delete(`${API_BASE}/${appConfig.projectEndpoint}/${id}`);
-        } catch {
-        throw new Error('Failed to delete project');
+        const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
+            method: 'DELETE',
+            headers: getAuthHeaders()
+        })
+
+        if (!response.ok) {
+            throw new Error('Failed to delete project')
+        }
+    } catch (error) {
+        console.error('Error deleting project:', error)
+        throw new Error('Failed to delete project')
     }
 }
 
 // получить один проект по ID
 export async function getProject(id: string): Promise<Project | null> {
     try {
-        const res = await axios.get(`${API_BASE}/${appConfig.projectEndpoint}/${id}`);
-        return res.data;
-        } catch (error) {
-        console.error('Error fetching project:', error);
-        return null;
+        const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        })
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                return null
+            }
+            throw new Error('Failed to fetch project')
+        }
+
+        return await response.json()
+    } catch (error) {
+        console.error('Error fetching project:', error)
+        return null
     }
 }

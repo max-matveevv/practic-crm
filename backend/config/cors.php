@@ -21,6 +21,7 @@ return [
 
     'allowed_origins' => [
         'http://localhost:3000',
+        'https://crm.practic.studio',
     ],
 
     'allowed_origins_patterns' => [],

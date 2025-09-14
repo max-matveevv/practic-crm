@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Task, Project } from '@/lib/types';
 import { fetchTasks, addTask, updateTask, deleteTask } from '@/api/tasks';
 import { fetchProjects } from '@/api/projects';
@@ -107,15 +107,15 @@ export default function TasksPage() {
 
     return (
         <div className="p-6">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Задачи</h1>
-                <button
-                    onClick={() => setShowAddForm(!showAddForm)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                    {showAddForm ? 'Отмена' : 'Добавить задачу'}
-                </button>
-            </div>
+                <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-2xl font-bold">Задачи</h1>
+                    <button
+                        onClick={() => setShowAddForm(!showAddForm)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    >
+                        {showAddForm ? 'Отмена' : 'Добавить задачу'}
+                    </button>
+                </div>
 
             {/* Фильтры */}
             <div className="mb-6 flex gap-4">
@@ -250,11 +250,11 @@ export default function TasksPage() {
                 ))}
             </div>
 
-            {filteredTasks.length === 0 && (
-                <div className="text-center text-gray-500 py-8">
-                    Задачи не найдены
-                </div>
-            )}
-        </div>
+                {filteredTasks.length === 0 && (
+                    <div className="text-center text-gray-500 py-8">
+                        Задачи не найдены
+                    </div>
+                )}
+            </div>
     );
 }
