@@ -119,7 +119,17 @@ php artisan view:cache
 php artisan migrate --force
 
 # Настроить storage link для изображений
+echo "🔗 Setting up storage link..."
+if [ -L public/storage ]; then
+    rm public/storage
+    echo "🗑️  Removed existing storage link"
+fi
 php artisan storage:link
+if [ -L public/storage ]; then
+    echo "✅ Storage link created successfully"
+else
+    echo "❌ Failed to create storage link"
+fi
 
 # Создать папку data если не существует
 if [ ! -d "../data" ]; then
@@ -128,10 +138,20 @@ if [ ! -d "../data" ]; then
 fi
 
 # Установить права доступа
+echo "🔐 Setting permissions..."
 chmod -R 755 storage bootstrap/cache
 chmod -R 755 ../data
 chown -R practic-crm:practic-crm storage bootstrap/cache
 chown -R practic-crm:practic-crm ../data
+echo "✅ Permissions set"
+
+# Проверить storage link
+echo "🔍 Checking storage link..."
+if [ -L public/storage ]; then
+    echo "✅ Storage link exists: $(readlink public/storage)"
+else
+    echo "❌ Storage link missing"
+fi
 
 # Frontend setup
 echo "🎨 Setting up frontend..."
