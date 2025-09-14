@@ -6,6 +6,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Маршрут для получения CSRF cookie (Sanctum)
+Route::get('/sanctum/csrf-cookie', function () {
+    return response()->json(['message' => 'CSRF cookie set']);
+})->middleware(['web', 'throttle:60,1']);
+
 // Telescope маршруты (только для продакшена)
 if (app()->environment('production')) {
     Route::get('/telescope', function () {

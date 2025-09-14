@@ -11,7 +11,7 @@ class TaskController extends Controller
     // GET /tasks - получить все задачи
     public function index(Request $request)
     {
-        $query = Task::with('project');
+        $query = Task::with('project')->where('user_id', $request->user()->id);
         
         // Фильтрация по проекту
         if ($request->has('project_id')) {
@@ -37,19 +37,32 @@ class TaskController extends Controller
             'priority' => 'integer|min:1|max:3'
         ]);
 
+        // Добавляем user_id к валидированным данным
+        $validated['user_id'] = $request->user()->id;
+
         $task = Task::create($validated);
         return response()->json($task->load('project'), 201);
     }
 
     // GET /tasks/{task} - получить задачу
-    public function show(Task $task)
+    public function show(Request $request, Task $task)
     {
+        // Проверяем, что задача принадлежит текущему пользователю
+        if ($task->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        
         return response()->json($task->load('project'));
     }
 
     // PUT /tasks/{task} - обновить задачу
     public function update(Request $request, Task $task)
     {
+        // Проверяем, что задача принадлежит текущему пользователю
+        if ($task->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         $validated = $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'description' => 'nullable|string',
@@ -63,15 +76,25 @@ class TaskController extends Controller
     }
 
     // DELETE /tasks/{task} - удалить задачу
-    public function destroy(Task $task)
+    public function destroy(Request $request, Task $task)
     {
+        // Проверяем, что задача принадлежит текущему пользователю
+        if ($task->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
         $task->delete();
         return response()->json(['message' => 'Task deleted']);
     }
 
     // GET /tasks/projects/{project} - получить задачи проекта
-    public function projectTasks(Project $project)
+    public function projectTasks(Request $request, Project $project)
     {
-        return response()->json($project->tasks()->orderBy('priority', 'desc')->orderBy('created_at', 'desc')->get());
+        // Проверяем, что проект принадлежит текущему пользователю
+        if ($project->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        return response()->json($project->tasks()->where('user_id', $request->user()->id)->orderBy('priority', 'desc')->orderBy('created_at', 'desc')->get());
     }
 }

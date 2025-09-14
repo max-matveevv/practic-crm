@@ -28,25 +28,57 @@ const removeToken = (): void => {
   }
 }
 
+// Получить CSRF токен из cookies
+const getCsrfToken = (): string | null => {
+  if (typeof window !== 'undefined') {
+    const cookies = document.cookie.split(';')
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split('=')
+      if (name === 'XSRF-TOKEN') {
+        return decodeURIComponent(value)
+      }
+    }
+  }
+  return null
+}
+
+// Получить CSRF cookie
+const getCsrfCookie = async (): Promise<void> => {
+  const baseUrl = API_BASE_URL.replace('/api', '')
+  const response = await fetch(`${baseUrl}/sanctum/csrf-cookie`, {
+    method: 'GET',
+    credentials: 'include'
+  })
+  
+  if (!response.ok) {
+    throw new Error(`Failed to get CSRF cookie: ${response.status}`)
+  }
+}
+
 // Получить заголовки с авторизацией
-const getAuthHeaders = (): HeadersInit => {
+const getAuthHeaders = (includeAuth = true): HeadersInit => {
   const token = getToken()
+  const csrfToken = getCsrfToken()
+  
   return {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    ...(token && { 'Authorization': `Bearer ${token}` })
+    'X-Requested-With': 'XMLHttpRequest',
+    ...(includeAuth && token && { 'Authorization': `Bearer ${token}` }),
+    ...(csrfToken && { 'X-XSRF-TOKEN': csrfToken })
   }
 }
 
 // Вход в систему
 export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
   try {
+    // Получаем CSRF cookie перед авторизацией
+    await getCsrfCookie()
+    
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
+      headers: getAuthHeaders(false), // Не включаем Authorization для login
+      credentials: 'include',
       body: JSON.stringify(credentials)
     })
 
@@ -67,12 +99,13 @@ export const login = async (credentials: LoginCredentials): Promise<AuthResponse
 // Регистрация
 export const register = async (credentials: RegisterCredentials): Promise<AuthResponse> => {
   try {
+    // Получаем CSRF cookie перед регистрацией
+    await getCsrfCookie()
+    
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
+      headers: getAuthHeaders(false), // Не включаем Authorization для register
+      credentials: 'include',
       body: JSON.stringify(credentials)
     })
 
@@ -97,7 +130,8 @@ export const logout = async (): Promise<void> => {
     if (token) {
       await fetch(`${API_BASE_URL}/auth/logout`, {
         method: 'POST',
-        headers: getAuthHeaders()
+        headers: getAuthHeaders(),
+        credentials: 'include'
       })
     }
   } catch (error) {
@@ -117,7 +151,8 @@ export const getCurrentUser = async (): Promise<User | null> => {
 
     const response = await fetch(`${API_BASE_URL}/auth/me`, {
       method: 'GET',
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
+      credentials: 'include'
     })
 
     if (!response.ok) {
@@ -148,6 +183,7 @@ export const updateProfile = async (userData: Partial<User>): Promise<User> => {
     const response = await fetch(`${API_BASE_URL}/auth/profile`, {
       method: 'PUT',
       headers: getAuthHeaders(),
+      credentials: 'include',
       body: JSON.stringify(userData)
     })
 
@@ -174,6 +210,7 @@ export const changePassword = async (passwordData: {
     const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
       method: 'POST',
       headers: getAuthHeaders(),
+      credentials: 'include',
       body: JSON.stringify(passwordData)
     })
 

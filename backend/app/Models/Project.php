@@ -21,12 +21,19 @@ class Project extends Model
         'ssh_password',
         'ssh_port',
         'build_commands',
-        'notes'
+        'notes',
+        'user_id'
     ];
 
     protected $casts = [
         'ssh_port' => 'integer',
     ];
+
+    // Отношение к пользователю
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Отношение к задачам
     public function tasks()

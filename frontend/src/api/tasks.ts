@@ -10,13 +10,35 @@ const getToken = (): string | null => {
   return null
 }
 
+// Получить CSRF токен из cookies
+const getCsrfToken = (): string | null => {
+  if (typeof window !== 'undefined') {
+    const cookies = document.cookie.split(';')
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split('=')
+      if (name === 'XSRF-TOKEN') {
+        return decodeURIComponent(value)
+      }
+    }
+  }
+  return null
+}
+
 // Получить заголовки с авторизацией
 const getAuthHeaders = (): HeadersInit => {
   const token = getToken()
+  const csrfToken = getCsrfToken()
+  
+  if (!token) {
+    throw new Error('Токен авторизации не найден')
+  }
+  
   return {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    ...(token && { 'Authorization': `Bearer ${token}` })
+    'X-Requested-With': 'XMLHttpRequest',
+    'Authorization': `Bearer ${token}`,
+    ...(csrfToken && { 'X-XSRF-TOKEN': csrfToken })
   }
 }
 
@@ -33,7 +55,8 @@ export async function fetchTasks(params?: {
         const url = `${API_BASE_URL}/tasks${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
         const response = await fetch(url, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: getAuthHeaders(),
+            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -59,6 +82,7 @@ export async function addTask(data: {
         const response = await fetch(`${API_BASE_URL}/tasks`, {
             method: 'POST',
             headers: getAuthHeaders(),
+            credentials: 'include',
             body: JSON.stringify(data)
         });
 
@@ -79,6 +103,7 @@ export async function updateTask(id: number, data: Partial<Task>): Promise<Task>
         const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
             method: 'PUT',
             headers: getAuthHeaders(),
+            credentials: 'include',
             body: JSON.stringify(data)
         });
 
@@ -98,7 +123,8 @@ export async function deleteTask(id: number): Promise<void> {
     try {
         const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
             method: 'DELETE',
-            headers: getAuthHeaders()
+            headers: getAuthHeaders(),
+            credentials: 'include'
         });
 
         if (!response.ok) {

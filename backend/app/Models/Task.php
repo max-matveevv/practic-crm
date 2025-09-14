@@ -11,12 +11,19 @@ class Task extends Model
         'description',
         'status',
         'project_id',
-        'priority'
+        'priority',
+        'user_id'
     ];
 
     protected $casts = [
         'priority' => 'integer',
     ];
+
+    // Отношение к пользователю
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     // Отношение к проекту
     public function project()

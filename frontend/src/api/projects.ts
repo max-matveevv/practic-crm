@@ -10,13 +10,35 @@ const getToken = (): string | null => {
   return null
 }
 
+// Получить CSRF токен из cookies
+const getCsrfToken = (): string | null => {
+  if (typeof window !== 'undefined') {
+    const cookies = document.cookie.split(';')
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split('=')
+      if (name === 'XSRF-TOKEN') {
+        return decodeURIComponent(value)
+      }
+    }
+  }
+  return null
+}
+
 // Получить заголовки с авторизацией
 const getAuthHeaders = (): HeadersInit => {
   const token = getToken()
+  const csrfToken = getCsrfToken()
+  
+  if (!token) {
+    throw new Error('Токен авторизации не найден')
+  }
+  
   return {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    ...(token && { 'Authorization': `Bearer ${token}` })
+    'X-Requested-With': 'XMLHttpRequest',
+    'Authorization': `Bearer ${token}`,
+    ...(csrfToken && { 'X-XSRF-TOKEN': csrfToken })
   }
 }
 
@@ -25,7 +47,8 @@ export async function fetchProjects(): Promise<Project[]> {
     try {
         const response = await fetch(`${API_BASE_URL}/projects`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: getAuthHeaders(),
+            credentials: 'include'
         })
 
         if (!response.ok) {
@@ -61,6 +84,7 @@ export async function addProject(data: {
         const response = await fetch(`${API_BASE_URL}/projects`, {
             method: 'POST',
             headers: getAuthHeaders(),
+            credentials: 'include',
             body: JSON.stringify(data)
         })
 
@@ -80,7 +104,8 @@ export async function deleteProject(id: number): Promise<void> {
     try {
         const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
             method: 'DELETE',
-            headers: getAuthHeaders()
+            headers: getAuthHeaders(),
+            credentials: 'include'
         })
 
         if (!response.ok) {
@@ -97,7 +122,8 @@ export async function getProject(id: string): Promise<Project | null> {
     try {
         const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
             method: 'GET',
-            headers: getAuthHeaders()
+            headers: getAuthHeaders(),
+            credentials: 'include'
         })
 
         if (!response.ok) {

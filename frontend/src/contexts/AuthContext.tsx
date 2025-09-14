@@ -62,6 +62,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const response = await login(credentials)
       setUser(response.user)
     } catch (error) {
+      removeToken()
       throw error
     } finally {
       setLoading(false)
@@ -74,6 +75,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const response = await register(credentials)
       setUser(response.user)
     } catch (error) {
+      removeToken()
       throw error
     } finally {
       setLoading(false)
