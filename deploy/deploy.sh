@@ -124,11 +124,20 @@ if [ -L public/storage ]; then
     rm public/storage
     echo "🗑️  Removed existing storage link"
 fi
-php artisan storage:link
+
+# Принудительно создать символическую ссылку
+ln -sfn ../storage/app/public public/storage
 if [ -L public/storage ]; then
-    echo "✅ Storage link created successfully"
+    echo "✅ Storage link created successfully: $(readlink public/storage)"
 else
-    echo "❌ Failed to create storage link"
+    echo "❌ Failed to create storage link manually, trying artisan command..."
+    php artisan storage:link
+    if [ -L public/storage ]; then
+        echo "✅ Storage link created via artisan: $(readlink public/storage)"
+    else
+        echo "❌ Failed to create storage link"
+        echo "🔧 Manual fix needed on server"
+    fi
 fi
 
 # Создать папку data если не существует
@@ -145,10 +154,22 @@ chown -R practic-crm:practic-crm storage bootstrap/cache
 chown -R practic-crm:practic-crm ../data
 echo "✅ Permissions set"
 
+# Создать папку для изображений если не существует
+if [ ! -d "storage/app/public/task-images" ]; then
+    mkdir -p storage/app/public/task-images
+    echo "📁 Created task-images directory"
+fi
+
 # Проверить storage link
 echo "🔍 Checking storage link..."
 if [ -L public/storage ]; then
     echo "✅ Storage link exists: $(readlink public/storage)"
+    echo "🔍 Testing storage access..."
+    if [ -d "storage/app/public/task-images" ]; then
+        echo "✅ Storage directory accessible"
+    else
+        echo "❌ Storage directory not accessible"
+    fi
 else
     echo "❌ Storage link missing"
 fi
@@ -193,9 +214,19 @@ php artisan migrate:status | head -5
 
 echo "📁 Storage link status:"
 if [ -L public/storage ]; then
-    echo "✅ Storage link exists"
+    echo "✅ Storage link exists: $(readlink public/storage)"
+    echo "🔍 Storage directory contents:"
+    ls -la storage/app/public/ | head -3
 else
     echo "❌ Storage link missing"
+fi
+
+echo "🖼️  Task images directory:"
+if [ -d "storage/app/public/task-images" ]; then
+    echo "✅ Task images directory exists"
+    echo "📊 Images count: $(ls storage/app/public/task-images/ | wc -l)"
+else
+    echo "❌ Task images directory missing"
 fi
 
 echo "🗄️  Database file:"
