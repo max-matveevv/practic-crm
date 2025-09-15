@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-
 // Проверяем, является ли маршрут публичным
 function isPublicRoute(pathname: string): boolean {
   // Главная страница
@@ -16,10 +15,11 @@ function isPublicRoute(pathname: string): boolean {
   return false
 }
 
-// Проверяем, есть ли токен авторизации в cookies
-function hasAuthToken(request: NextRequest): boolean {
-  const token = request.cookies.get('auth_token')?.value
-  return !!token
+// Проверяем, является ли маршрут защищенным
+function isProtectedRoute(pathname: string): boolean {
+  // Защищенные маршруты
+  const protectedRoutes = ['/dashboard', '/tasks', '/projects', '/profile']
+  return protectedRoutes.some(route => pathname.startsWith(route))
 }
 
 export function middleware(request: NextRequest) {
@@ -32,24 +32,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Если это публичный маршрут
+  // Если это публичный маршрут, пропускаем
   if (isPublicRoute(pathname)) {
-    // Если пользователь авторизован и заходит на главную страницу, перенаправляем на задачи
-    if (pathname === '/' && hasAuthToken(request)) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/tasks'
-      return NextResponse.redirect(url)
-    }
     return NextResponse.next()
   }
 
-  // Если нет токена, перенаправляем на главную
-  if (!hasAuthToken(request)) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/'
-    return NextResponse.redirect(url)
+  // Если это защищенный маршрут, пропускаем - проверка авторизации будет на клиенте
+  // Middleware не может получить доступ к localStorage, поэтому полагаемся на client-side проверку
+  if (isProtectedRoute(pathname)) {
+    return NextResponse.next()
   }
 
+  // Для всех остальных маршрутов пропускаем
   return NextResponse.next()
 }
 

@@ -8,7 +8,6 @@ import { login, register, logout, getCurrentUser, isAuthenticated } from '@/api/
 const removeToken = (): void => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('auth_token')
-    document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
   }
 }
 
@@ -36,9 +35,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Проверяем токен в localStorage или cookies
-        const token = localStorage.getItem('auth_token') || 
-          document.cookie.split('; ').find(row => row.startsWith('auth_token='))?.split('=')[1]
+        // Проверяем токен в localStorage
+        const token = localStorage.getItem('auth_token')
         
         if (token) {
           const userData = await getCurrentUser()
@@ -87,8 +85,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setLoading(true)
       await logout()
       setUser(null)
+      // Перенаправляем на главную страницу после выхода
+      if (typeof window !== 'undefined') {
+        window.location.href = '/'
+      }
     } catch (error) {
       console.error('Logout error:', error)
+      // Даже если logout на сервере не удался, очищаем локальные данные
+      setUser(null)
+      removeToken()
+      if (typeof window !== 'undefined') {
+        window.location.href = '/'
+      }
     } finally {
       setLoading(false)
     }

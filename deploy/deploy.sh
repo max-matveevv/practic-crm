@@ -296,6 +296,13 @@ rm -rf /tmp/storage_backup
 rm -f /tmp/backend_env_backup
 echo "✅ Temporary files cleaned"
 
+# Диагностика после деплоя
+echo "🔍 Running post-deployment diagnostics..."
+echo "📁 Storage link: $([ -L backend/public/storage ] && echo "✅ exists" || echo "❌ missing")"
+echo "📂 Storage dir: $([ -d backend/storage/app/public ] && echo "✅ exists" || echo "❌ missing")"
+echo "🗄️ Database: $([ -f data/database.sqlite ] && echo "✅ exists" || echo "❌ missing")"
+echo "🌐 Nginx: $(sudo nginx -t 2>/dev/null && echo "✅ config OK" || echo "❌ config error")"
+
 echo ""
 echo "✅ CloudPanel deployment completed successfully!"
 echo "🌐 Frontend: https://crm.practic.studio"
