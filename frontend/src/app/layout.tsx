@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="ru" className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
-        <meta name="csrf-token" content="" />
+        <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="antialiased">
         {children}

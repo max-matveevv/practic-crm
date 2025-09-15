@@ -45,43 +45,19 @@ export function ImageUpload({ images, onImagesChange, maxImages = 10, maxSize = 
                 }
             }
 
-            // Получаем CSRF токен
-            await fetch(`${API_BASE_URL.replace('/api', '')}/sanctum/csrf-cookie`, {
-                method: 'GET',
-                credentials: 'include'
-            });
-            
-            // Небольшая задержка для установки cookie
-            await new Promise(resolve => setTimeout(resolve, 100));
-
             const formData = new FormData();
             Array.from(files).forEach(file => {
                 formData.append('images[]', file);
             });
 
-            // Получаем CSRF токен из cookie
-            const getCsrfTokenFromCookie = () => {
-                const cookies = document.cookie.split(';');
-                for (const cookie of cookies) {
-                    const [name, value] = cookie.trim().split('=');
-                    if (name === 'XSRF-TOKEN') {
-                        return decodeURIComponent(value);
-                    }
-                }
-                return '';
-            };
-
-            const headers = {
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-XSRF-TOKEN': getCsrfTokenFromCookie()
-            };
-
             const response = await fetch(`${API_BASE_URL}/upload/images`, {
                 method: 'POST',
                 body: formData,
-                credentials: 'include',
-                headers: headers
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                }
             });
 
             if (!response.ok) {

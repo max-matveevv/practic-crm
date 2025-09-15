@@ -7,7 +7,6 @@ export async function fetchProjects(): Promise<Project[]> {
         const response = await fetch(`${API_BASE_URL}/projects`, {
             method: 'GET',
             headers: getAuthHeaders(),
-            credentials: 'include'
         })
 
         if (!response.ok) {
@@ -43,7 +42,6 @@ export async function addProject(data: {
         const response = await fetch(`${API_BASE_URL}/projects`, {
             method: 'POST',
             headers: getAuthHeaders(),
-            credentials: 'include',
             body: JSON.stringify(data)
         })
 
@@ -64,7 +62,6 @@ export async function deleteProject(id: number): Promise<void> {
         const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
             method: 'DELETE',
             headers: getAuthHeaders(),
-            credentials: 'include'
         })
 
         if (!response.ok) {
@@ -82,7 +79,6 @@ export async function getProject(id: string): Promise<Project | null> {
         const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
             method: 'GET',
             headers: getAuthHeaders(),
-            credentials: 'include'
         })
 
         if (!response.ok) {

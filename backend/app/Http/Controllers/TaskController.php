@@ -32,14 +32,18 @@ class TaskController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'status' => 'in:pending,in_progress,completed',
+            'status' => 'nullable|in:pending,in_progress,completed',
             'project_id' => 'nullable|exists:projects,id',
-            'priority' => 'integer|min:1|max:3',
+            'priority' => 'nullable|integer|min:1|max:3',
             'images' => 'nullable|array'
         ]);
 
         // Добавляем user_id к валидированным данным
         $validated['user_id'] = $request->user()->id;
+        
+        // Устанавливаем значения по умолчанию
+        $validated['status'] = $validated['status'] ?? 'pending';
+        $validated['priority'] = $validated['priority'] ?? 1;
 
         $task = Task::create($validated);
         return response()->json($task->load('project'), 201);

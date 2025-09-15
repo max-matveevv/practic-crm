@@ -15,7 +15,6 @@ export async function fetchTasks(params?: {
         const response = await fetch(url, {
             method: 'GET',
             headers: getAuthHeaders(),
-            credentials: 'include'
         });
 
         if (!response.ok) {
@@ -41,12 +40,13 @@ export async function addTask(data: {
         const response = await fetch(`${API_BASE_URL}/tasks`, {
             method: 'POST',
             headers: getAuthHeaders(),
-            credentials: 'include',
             body: JSON.stringify(data)
         });
 
         if (!response.ok) {
-            throw new Error('Failed to add task');
+            const errorText = await response.text();
+            console.error('Error response:', errorText);
+            throw new Error(`Failed to add task: ${response.status} - ${errorText}`);
         }
 
         return await response.json();
@@ -62,7 +62,6 @@ export async function updateTask(id: number, data: Partial<Task>): Promise<Task>
         const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
             method: 'PUT',
             headers: getAuthHeaders(),
-            credentials: 'include',
             body: JSON.stringify(data)
         });
 
@@ -83,7 +82,6 @@ export async function deleteTask(id: number): Promise<void> {
         const response = await fetch(`${API_BASE_URL}/tasks/${id}`, {
             method: 'DELETE',
             headers: getAuthHeaders(),
-            credentials: 'include'
         });
 
         if (!response.ok) {

@@ -1,52 +1,29 @@
 import { AuthResponse, LoginCredentials, RegisterCredentials, User } from '@/lib/types'
 import { getToken, getAuthHeaders, API_BASE_URL } from './common'
 
-// Сохранить токен в localStorage и cookies
+// Сохранить токен в localStorage
 const setToken = (token: string): void => {
   if (typeof window !== 'undefined') {
     localStorage.setItem('auth_token', token)
-    // Устанавливаем cookie для middleware
-    document.cookie = `auth_token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`
   }
 }
 
-// Удалить токен из localStorage и cookies
+// Удалить токен из localStorage
 const removeToken = (): void => {
   if (typeof window !== 'undefined') {
     localStorage.removeItem('auth_token')
-    // Удаляем cookie
-    document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
   }
 }
 
-// Получить CSRF cookie
-const getCsrfCookie = async (): Promise<void> => {
-  const baseUrl = API_BASE_URL.replace('/api', '')
-  const response = await fetch(`${baseUrl}/sanctum/csrf-cookie`, {
-    method: 'GET',
-    credentials: 'include',
-    headers: {
-      'Accept': 'application/json',
-      'X-Requested-With': 'XMLHttpRequest'
-    }
-  })
-  
-  if (!response.ok) {
-    throw new Error(`Failed to get CSRF cookie: ${response.status}`)
-  }
-}
+// CSRF больше не нужен - используем только Bearer токены
 
 
 // Вход в систему
 export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
   try {
-    // Получаем CSRF cookie перед авторизацией
-    await getCsrfCookie()
-    
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: getAuthHeaders(false), // Не включаем Authorization для login
-      credentials: 'include',
       body: JSON.stringify(credentials)
     })
 
@@ -67,13 +44,9 @@ export const login = async (credentials: LoginCredentials): Promise<AuthResponse
 // Регистрация
 export const register = async (credentials: RegisterCredentials): Promise<AuthResponse> => {
   try {
-    // Получаем CSRF cookie перед регистрацией
-    await getCsrfCookie()
-    
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: getAuthHeaders(false), // Не включаем Authorization для register
-      credentials: 'include',
       body: JSON.stringify(credentials)
     })
 
@@ -98,8 +71,7 @@ export const logout = async (): Promise<void> => {
     if (token) {
       await fetch(`${API_BASE_URL}/auth/logout`, {
         method: 'POST',
-        headers: getAuthHeaders(),
-        credentials: 'include'
+        headers: getAuthHeaders()
       })
     }
   } catch (error) {
@@ -120,7 +92,6 @@ export const getCurrentUser = async (): Promise<User | null> => {
     const response = await fetch(`${API_BASE_URL}/auth/me`, {
       method: 'GET',
       headers: getAuthHeaders(),
-      credentials: 'include'
     })
 
     if (!response.ok) {
@@ -151,7 +122,6 @@ export const updateProfile = async (userData: Partial<User>): Promise<User> => {
     const response = await fetch(`${API_BASE_URL}/auth/profile`, {
       method: 'PUT',
       headers: getAuthHeaders(),
-      credentials: 'include',
       body: JSON.stringify(userData)
     })
 
@@ -178,7 +148,6 @@ export const changePassword = async (passwordData: {
     const response = await fetch(`${API_BASE_URL}/auth/change-password`, {
       method: 'POST',
       headers: getAuthHeaders(),
-      credentials: 'include',
       body: JSON.stringify(passwordData)
     })
 
@@ -198,7 +167,6 @@ export const sendPasswordResetLink = async (email: string): Promise<{ message: s
     const response = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
       method: 'POST',
       headers: getAuthHeaders(false),
-      credentials: 'include',
       body: JSON.stringify({ email })
     })
 
@@ -221,7 +189,6 @@ export const resetPassword = async (email: string, token: string, password: stri
     const response = await fetch(`${API_BASE_URL}/auth/reset-password`, {
       method: 'POST',
       headers: getAuthHeaders(false),
-      credentials: 'include',
       body: JSON.stringify({
         email,
         token,

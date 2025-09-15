@@ -219,6 +219,31 @@ echo "🔄 Restarting services..."
 pm2 restart practic-crm-backend
 pm2 restart practic-crm-frontend
 
+# Исправить символическую ссылку storage (если нужно)
+echo "🔗 Ensuring storage link is correct..."
+cd ../backend
+if [ ! -L public/storage ] || [ ! -e public/storage ]; then
+    echo "🔧 Fixing storage link..."
+    rm -f public/storage
+    ln -sf ../storage/app/public public/storage
+    echo "✅ Storage link recreated"
+fi
+
+# Установить правильные права доступа для storage
+echo "🔐 Setting storage permissions..."
+chmod -R 755 storage/app/public
+chown -R www-data:www-data storage/app/public 2>/dev/null || chown -R practic-crm:practic-crm storage/app/public
+echo "✅ Storage permissions set"
+
+# Перезагрузить Nginx конфигурацию
+echo "🌐 Reloading Nginx configuration..."
+sudo nginx -t && sudo systemctl reload nginx
+if [ $? -eq 0 ]; then
+    echo "✅ Nginx configuration reloaded successfully"
+else
+    echo "❌ Failed to reload Nginx configuration"
+fi
+
 # Проверить статус
 pm2 status
 
