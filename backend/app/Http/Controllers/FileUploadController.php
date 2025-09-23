@@ -20,12 +20,14 @@ class FileUploadController extends Controller
             foreach ($request->file('images') as $image) {
                 $filename = Str::uuid() . '.' . $image->getClientOriginalExtension();
                 $path = $image->storeAs('task-images', $filename, 'public');
-                $baseUrl = config('app.url');
+                
+                // Используем правильный URL для продакшена
+                $url = Storage::disk('public')->url($path);
                 
                 $uploadedImages[] = [
                     'filename' => $filename,
                     'path' => $path,
-                    'url' => $baseUrl . Storage::url($path),
+                    'url' => $url,
                     'original_name' => $image->getClientOriginalName(),
                     'size' => $image->getSize()
                 ];

@@ -66,8 +66,7 @@ class TaskController extends Controller
             return response()->json($task->load('project'), 201);
         } catch (\Exception $e) {
             \Log::error('Task creation error: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            return response()->json(['message' => 'Server Error', 'error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Server Error'], 500);
         }
     }
 
