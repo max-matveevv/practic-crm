@@ -6,10 +6,13 @@ export type Project = {
     password?: string
     url?: string
     accesses?: string
+    accesses_login?: string
+    accesses_password?: string
     // Новые поля
     admin_url?: string
     admin_login?: string
     admin_password?: string
+    admin_accesses?: string
     ssh_host?: string
     ssh_user?: string
     ssh_password?: string

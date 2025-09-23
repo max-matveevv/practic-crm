@@ -33,6 +33,20 @@ class ProjectController extends Controller
         return response()->json($project);
     }
 
+    // PUT /projects/{project}
+    public function update(Request $request, Project $project)
+    {
+        // Проверяем, что проект принадлежит текущему пользователю
+        if ($project->user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $data = $request->all();
+        $project->update($data);
+        
+        return response()->json($project);
+    }
+
     // DELETE /projects/{project}
     public function destroy(Request $request, Project $project)
     {

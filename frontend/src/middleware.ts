@@ -38,7 +38,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Если это защищенный маршрут, пропускаем - проверка авторизации будет на клиенте
-  // Middleware не может получить доступ к localStorage, поэтому полагаемся на client-side проверку
+  // AuthGuard компонент проверит авторизацию и сделает редирект при необходимости
   if (isProtectedRoute(pathname)) {
     return NextResponse.next()
   }

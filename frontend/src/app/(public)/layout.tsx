@@ -23,7 +23,7 @@ export default function PublicLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="ru">
+		<html lang="ru" className="h-screen">
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-gray-50`}
 			>

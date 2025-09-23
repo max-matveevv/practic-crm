@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { AddProjectForm } from '@/components/ProjectCard/AddProjectForm';
+import { ProjectForm } from '@/components/ProjectCard/ProjectForm';
 import { ProjectCard } from '@/components/ProjectCard/ProjectCard';
 import { Project } from '@/lib/types';
 import { fetchProjects } from '@/api/projects';
@@ -18,9 +18,15 @@ export default function ProjectsPage() {
             })
     }, [])
 
-    const handleAddProject = (newProject: Project) => {
+    const handleProjectSaved = (newProject: Project) => {
         setProjects((prev) => [newProject, ...prev]);
         setIsModalOpen(false) // закрыть модалку после добавления
+    }
+
+    const handleUpdateProject = (updatedProject: Project) => {
+        setProjects((prev) => prev.map(project => 
+            project.id === updatedProject.id ? updatedProject : project
+        ));
     }
 
     return (
@@ -39,19 +45,10 @@ export default function ProjectsPage() {
 
                 {/* Модалка */}
                 {isModalOpen && (
-                    <div className="fixed inset-0 flex justify-center items-center z-50">
-                        <div className="absolute bg-black/50 top-0 left-0 w-full h-full cursor-pointer" onClick={() => setIsModalOpen(false)}></div>
-                        <div className="bg-bg-1 rounded-2xl p-6 w-full max-w-md relative">
-                            <button
-                                className="absolute top-5 right-5 text-white hover:text-blue-600 cursor-pointer text-3xl"
-                                onClick={() => setIsModalOpen(false)}
-                            >
-                                &times;
-                            </button>
-
-                            <AddProjectForm onProjectAdded={handleAddProject} />
-                        </div>
-                    </div>
+                    <ProjectForm
+                        onProjectSaved={handleProjectSaved}
+                        onCancel={() => setIsModalOpen(false)}
+                    />
                 )}
 
                 
@@ -68,6 +65,7 @@ export default function ProjectsPage() {
                             key={project.id}
                             project={project}
                             onDelete={(id) => setProjects((prev) => prev.filter((p) => p.id !== id))}
+                            onUpdate={handleUpdateProject}
                             />
 
                     ))}

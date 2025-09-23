@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -65,7 +66,7 @@ class TaskController extends Controller
             $task = Task::create($validated);
             return response()->json($task->load('project'), 201);
         } catch (\Exception $e) {
-            \Log::error('Task creation error: ' . $e->getMessage());
+            Log::error('Task creation error: ' . $e->getMessage());
             return response()->json(['message' => 'Server Error'], 500);
         }
     }

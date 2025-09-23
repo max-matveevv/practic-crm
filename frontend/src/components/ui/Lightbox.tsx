@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect } from 'react';
+import Image from 'next/image';
 import { Button } from './Button';
 
 interface LightboxProps {
@@ -96,9 +97,11 @@ export function Lightbox({ isOpen, onClose, images, currentIndex, onNext, onPrev
 
       {/* Image container */}
       <div className="relative max-w-[90vw] max-h-[90vh] flex items-center justify-center">
-        <img
+        <Image
           src={currentImage.url}
           alt={currentImage.original_name}
+          width={800}
+          height={600}
           className="max-w-full max-h-full object-contain rounded-lg"
         />
       </div>

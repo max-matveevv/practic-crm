@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import Image from 'next/image';
 import { Button } from './Button';
 import { API_BASE_URL } from '@/api/common';
 
@@ -131,9 +132,11 @@ export function ImageUpload({ images, onImagesChange, maxImages = 10, maxSize = 
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     {images.map((image, index) => (
                         <div key={index} className="relative group">
-                            <img
+                            <Image
                                 src={image.url}
                                 alt={image.original_name}
+                                width={300}
+                                height={128}
                                 className="w-full h-32 object-cover rounded-lg border border-white/10"
                             />
                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center">

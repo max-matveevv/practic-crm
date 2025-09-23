@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Task } from '@/lib/types';
 import { Select } from '@/components/ui/Select';
 import { Lightbox } from '@/components/ui/Lightbox';
@@ -112,9 +113,11 @@ export function TaskCardView({
                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                                     {task.images.map((image, index) => (
                                         <div key={index} className="relative group">
-                                            <img
+                                            <Image
                                                 src={image.url}
                                                 alt={image.original_name}
+                                                width={200}
+                                                height={96}
                                                 className="w-full h-24 object-cover rounded-lg border border-white/10 cursor-pointer hover:opacity-80 transition-opacity"
                                                 onClick={() => onOpenLightbox(index)}
                                             />
@@ -126,7 +129,15 @@ export function TaskCardView({
                         
                         <div className="flex items-center justify-between">
                             {task.project && (
-                                <p className='text-xs text-white/50'>Проект: <span className='text-blue-400'>{task.project.title}</span></p>
+                                <p className='text-xs text-white/50'>
+                                    Проект: 
+                                    <a 
+                                        href={`/projects/${task.project.id}`}
+                                        className='text-blue-400 hover:text-blue-300 underline ml-1'
+                                    >
+                                        {task.project.title}
+                                    </a>
+                                </p>
                             )}
 
                             <div className="text-xs text-white/50 space-y-1 flex items-center gap-2 justify-end">

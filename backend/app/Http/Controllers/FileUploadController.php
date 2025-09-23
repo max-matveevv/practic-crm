@@ -22,7 +22,7 @@ class FileUploadController extends Controller
                 $path = $image->storeAs('task-images', $filename, 'public');
                 
                 // Используем правильный URL для продакшена
-                $url = Storage::disk('public')->url($path);
+                $url = asset('storage/' . $path);
                 
                 $uploadedImages[] = [
                     'filename' => $filename,

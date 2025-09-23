@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ProtectedContent } from "@/components/ProtectedContent";
 import { Header } from "@/components/elements/Header";
 import { Sidebar } from "@/components/elements/Sidebar";
 import { Footer } from "@/components/elements/Footer";
@@ -25,25 +26,27 @@ export default function ProtectedLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang="ru">
+		<html lang="ru" className="h-screen">
 			<body
 				className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen`}
 			>
 				<AuthProvider>
-					<div className="container h-full">
-						<Header />
+					<ProtectedContent>
+						<div className="container h-screen !max-w-[1600px]">
+							<Header />
 
-						<div className="flex h-[calc(100%-100px)] mb-6">
-							
-							<Sidebar />
+							<div className="flex h-[calc(100%-100px)] mb-6">
+								
+								<Sidebar />
 
-							<div className="w-[calc(100%-250px-1rem)] bg-bg-2 rounded-r-xl">
-								{children}
+								<div className="w-[calc(100%-250px-1rem)] bg-bg-2 rounded-r-xl overflow-y-auto">
+									{children}
+								</div>
 							</div>
-						</div>
 
-						<Footer />
-					</div>
+							<Footer />
+						</div>
+					</ProtectedContent>
 				</AuthProvider>
 			</body>
 		</html>
