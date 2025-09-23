@@ -35,13 +35,21 @@ export async function addTask(data: {
     status?: 'pending' | 'in_progress' | 'completed';
     project_id?: number;
     priority?: 1 | 2 | 3;
+    images?: Array<{ filename: string; path: string; url: string; original_name: string; size: number }>;
 }): Promise<Task> {
     try {
+        console.log('Adding task with data:', data);
+        console.log('API_BASE_URL:', API_BASE_URL);
+        console.log('Auth headers:', getAuthHeaders());
+        
         const response = await fetch(`${API_BASE_URL}/tasks`, {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify(data)
         });
+
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -49,7 +57,9 @@ export async function addTask(data: {
             throw new Error(`Failed to add task: ${response.status} - ${errorText}`);
         }
 
-        return await response.json();
+        const result = await response.json();
+        console.log('Task created successfully:', result);
+        return result;
     } catch (error) {
         console.error('Error adding task:', error);
         throw new Error('Failed to add task');

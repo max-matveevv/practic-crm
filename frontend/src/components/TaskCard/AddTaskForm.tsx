@@ -42,7 +42,8 @@ export function AddTaskForm({ projects, onSubmit, onCancel }: AddTaskFormProps) 
             description: '',
             status: 'pending',
             project_id: undefined,
-            priority: 1
+            priority: 1,
+            images: []
         });
     };
 
