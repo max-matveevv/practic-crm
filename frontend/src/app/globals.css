@@ -3,6 +3,9 @@
 :root {
 	--background: #1A1C1F;
 	--foreground: #171717;
+}
+
+@theme inline {
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--font-sans: var(--font-geist-sans);
