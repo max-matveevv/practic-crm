@@ -25,6 +25,11 @@ function isProtectedRoute(pathname: string): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  // Пропускаем /admin - это обрабатывается Laravel/Filament через nginx
+  if (pathname.startsWith('/admin')) {
+    return NextResponse.next()
+  }
+
   // Пропускаем статические файлы и API маршруты
   if (pathname.startsWith('/_next/') || 
       pathname.startsWith('/api/') || 
@@ -51,11 +56,12 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
+     * - /admin (обрабатывается Laravel/Filament)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - public folder
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!admin|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
