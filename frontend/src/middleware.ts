@@ -25,9 +25,13 @@ function isProtectedRoute(pathname: string): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Пропускаем /admin - это обрабатывается Laravel/Filament через nginx
+  // КРИТИЧЕСКИ ВАЖНО: /admin обрабатывается Laravel/Filament через nginx
+  // Если запрос все равно попал сюда, возвращаем пустой ответ
+  // чтобы Next.js не обрабатывал этот путь
   if (pathname.startsWith('/admin')) {
-    return NextResponse.next()
+    // Возвращаем пустой ответ, чтобы запрос не обрабатывался Next.js
+    // Nginx должен перехватить запрос до того, как он попадет сюда
+    return new NextResponse(null, { status: 200 })
   }
 
   // Пропускаем статические файлы и API маршруты
@@ -55,13 +59,9 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
-     * - /admin (обрабатывается Laravel/Filament)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
+     * Исключаем /admin из обработки - он обрабатывается Laravel/Filament через nginx
+     * Используем более простой паттерн, который точно исключает /admin
      */
-    '/((?!admin|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!admin|_next/static|_next/image|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
