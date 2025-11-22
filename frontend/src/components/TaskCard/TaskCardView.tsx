@@ -57,7 +57,7 @@ export function TaskCardView({
     return (
         <>
             <div 
-                className={`border border-white/10 rounded p-4 ${task.status === 'completed' ? 'opacity-20' : ''}`}
+                className={`border border-white/10 rounded p-4 ${task.status === 'completed' ? 'opacity-20' : ''} ${task.status === 'in_progress' ? '!border-blue-500' : ''}`}
             >
                 <div className="flex justify-between items-start">
                     <div className="flex-1">
@@ -67,7 +67,7 @@ export function TaskCardView({
                             </div>
                             
                             <div className="flex gap-2">
-                                <span className={`px-2 py-1 rounded text-xs flex items-center justify-center border border-white/10 ${getPriorityColor(task.priority)}`}>
+                                <span className={`px-2 py-1 rounded text-xs flex items-center justify-center border border-white/10 text-nowrap min-w-36 ${getPriorityColor(task.priority)}`}>
                                     Приоритет: {getPriorityText(task.priority)}
                                 </span>
 
@@ -79,7 +79,7 @@ export function TaskCardView({
                                         { value: 'in_progress', label: 'В работе' },
                                         { value: 'completed', label: 'Завершена' }
                                     ]}
-                                    className="w-32"
+                                    className="w-36"
                                 />
 
                                 <button
