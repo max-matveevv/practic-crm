@@ -36,6 +36,14 @@ export function Header() {
                             <Link href={'/tasks'} className="text-white/70 hover:text-white text-sm transition-colors">
                                 Задачи
                             </Link>
+                            <a 
+                                href="/admin"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-white/70 hover:text-white text-sm transition-colors"
+                            >
+                                Админка
+                            </a>
                             
                             <div className="flex items-center gap-3">
                                 <span className="text-sm text-white/70">

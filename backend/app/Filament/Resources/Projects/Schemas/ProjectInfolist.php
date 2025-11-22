@@ -20,10 +20,10 @@ class ProjectInfolist
                         TextEntry::make('title')
                             ->label('Название'),
                         
-                        TextEntry::make('description')
+                TextEntry::make('description')
                             ->label('Описание')
-                            ->placeholder('-')
-                            ->columnSpanFull(),
+                    ->placeholder('-')
+                    ->columnSpanFull(),
                         
                         TextEntry::make('user.name')
                             ->label('Пользователь'),
@@ -45,14 +45,14 @@ class ProjectInfolist
                             ->openUrlInNewTab()
                             ->placeholder('-'),
                         
-                        TextEntry::make('accesses')
+                TextEntry::make('accesses')
                             ->label('Доступы')
-                            ->placeholder('-')
-                            ->columnSpanFull(),
+                    ->placeholder('-')
+                    ->columnSpanFull(),
                         
                         TextEntry::make('accesses_login')
                             ->label('Логин доступа')
-                            ->placeholder('-'),
+                    ->placeholder('-'),
                         
                         TextEntry::make('accesses_password')
                             ->label('Пароль доступа')
@@ -61,15 +61,15 @@ class ProjectInfolist
                 
                 Section::make('Админ панель')
                     ->schema([
-                        TextEntry::make('admin_url')
+                TextEntry::make('admin_url')
                             ->label('URL админки')
                             ->url(fn ($record) => $record->admin_url)
                             ->openUrlInNewTab()
-                            ->placeholder('-'),
+                    ->placeholder('-'),
                         
-                        TextEntry::make('admin_login')
+                TextEntry::make('admin_login')
                             ->label('Логин админки')
-                            ->placeholder('-'),
+                    ->placeholder('-'),
                         
                         TextEntry::make('admin_password')
                             ->label('Пароль админки')
@@ -83,34 +83,34 @@ class ProjectInfolist
                 
                 Section::make('SSH доступ')
                     ->schema([
-                        TextEntry::make('ssh_host')
+                TextEntry::make('ssh_host')
                             ->label('SSH Host')
-                            ->placeholder('-'),
+                    ->placeholder('-'),
                         
-                        TextEntry::make('ssh_user')
+                TextEntry::make('ssh_user')
                             ->label('SSH User')
-                            ->placeholder('-'),
+                    ->placeholder('-'),
                         
                         TextEntry::make('ssh_password')
                             ->label('SSH Password')
                             ->placeholder('••••••••'),
                         
-                        TextEntry::make('ssh_port')
+                TextEntry::make('ssh_port')
                             ->label('SSH Port')
                             ->placeholder('-'),
                     ]),
                 
                 Section::make('Дополнительно')
                     ->schema([
-                        TextEntry::make('build_commands')
+                TextEntry::make('build_commands')
                             ->label('Команды сборки')
-                            ->placeholder('-')
-                            ->columnSpanFull(),
+                    ->placeholder('-')
+                    ->columnSpanFull(),
                         
-                        TextEntry::make('notes')
+                TextEntry::make('notes')
                             ->label('Заметки')
-                            ->placeholder('-')
-                            ->columnSpanFull(),
+                    ->placeholder('-')
+                    ->columnSpanFull(),
                         
                         TextEntry::make('created_at')
                             ->label('Создан')

@@ -17,7 +17,7 @@ class ProjectForm
             ->components([
                 Section::make('Основная информация')
                     ->schema([
-                        TextInput::make('title')
+                TextInput::make('title')
                             ->label('Название')
                             ->required()
                             ->maxLength(255),
@@ -40,19 +40,19 @@ class ProjectForm
                         TextInput::make('login')
                             ->label('Логин'),
                         
-                        TextInput::make('password')
+                TextInput::make('password')
                             ->label('Пароль')
-                            ->password(),
+                    ->password(),
                         
-                        TextInput::make('url')
+                TextInput::make('url')
                             ->label('URL')
                             ->url()
                             ->maxLength(255),
                         
-                        Textarea::make('accesses')
+                Textarea::make('accesses')
                             ->label('Доступы')
                             ->rows(3)
-                            ->columnSpanFull(),
+                    ->columnSpanFull(),
                         
                         TextInput::make('accesses_login')
                             ->label('Логин доступа'),
@@ -64,7 +64,7 @@ class ProjectForm
                 
                 Section::make('Админ панель')
                     ->schema([
-                        TextInput::make('admin_url')
+                TextInput::make('admin_url')
                             ->label('URL админки')
                             ->url()
                             ->maxLength(255),
@@ -72,9 +72,9 @@ class ProjectForm
                         TextInput::make('admin_login')
                             ->label('Логин админки'),
                         
-                        TextInput::make('admin_password')
+                TextInput::make('admin_password')
                             ->label('Пароль админки')
-                            ->password(),
+                    ->password(),
                         
                         Textarea::make('admin_accesses')
                             ->label('Админ доступы')
@@ -90,29 +90,29 @@ class ProjectForm
                         TextInput::make('ssh_user')
                             ->label('SSH User'),
                         
-                        TextInput::make('ssh_password')
+                TextInput::make('ssh_password')
                             ->label('SSH Password')
-                            ->password(),
+                    ->password(),
                         
-                        TextInput::make('ssh_port')
+                TextInput::make('ssh_port')
                             ->label('SSH Port')
-                            ->numeric()
-                            ->default(22),
+                    ->numeric()
+                    ->default(22),
                     ]),
                 
                 Section::make('Дополнительно')
                     ->schema([
-                        Textarea::make('build_commands')
+                Textarea::make('build_commands')
                             ->label('Команды сборки')
                             ->rows(4)
                             ->helperText('Команды для сборки проекта')
-                            ->columnSpanFull(),
+                    ->columnSpanFull(),
                         
-                        Textarea::make('notes')
+                Textarea::make('notes')
                             ->label('Заметки')
                             ->rows(4)
                             ->helperText('Дополнительные заметки и инструкции')
-                            ->columnSpanFull(),
+                    ->columnSpanFull(),
                     ]),
             ]);
     }

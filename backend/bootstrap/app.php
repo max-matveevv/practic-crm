@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class, // Отключаем
         ]);
+        
+        // КРИТИЧЕСКИ ВАЖНО: Доверяем прокси, чтобы Laravel видел HTTPS через nginx
+        // Без этого Laravel генерирует HTTP ссылки вместо HTTPS
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
