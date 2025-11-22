@@ -39,6 +39,19 @@ module.exports = {
       out_file: '/home/practic-crm/logs/practic-crm-frontend-out.log',
       log_file: '/home/practic-crm/logs/practic-crm-frontend.log',
       time: true
+    },
+    {
+      name: 'github-actions-runner',
+      script: 'run.sh',
+      cwd: '/home/practic-crm/actions-runner',
+      instances: 1,
+      autorestart: true,
+      watch: false,
+      max_memory_restart: '500M',
+      error_file: '/home/practic-crm/logs/github-runner-error.log',
+      out_file: '/home/practic-crm/logs/github-runner-out.log',
+      log_file: '/home/practic-crm/logs/github-runner.log',
+      time: true
     }
   ]
 };
